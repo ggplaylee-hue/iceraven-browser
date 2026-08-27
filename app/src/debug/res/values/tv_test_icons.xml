@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="tv_browser_icon" type="mipmap">@mipmap/ic_launcher</item>
+    <item name="tv_browser_icon_round" type="mipmap">@mipmap/ic_launcher_round</item>
+</resources>
