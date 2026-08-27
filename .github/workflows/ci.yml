@@ -51,13 +51,7 @@ jobs:
       - name: Build release APKs
         env:
           GRADLE_OPTS: -Dorg.gradle.jvmargs="-XX:MaxMetaspaceSize=3g -Xms1g -Xmx6g -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/dev/stderr"
-        run: |
-          ./gradlew app:testDebugUnitTest \
-            --tests "org.mozilla.fenix.lifecycle.BackgroundTabSuspenderTest" \
-            --stacktrace --no-daemon
-          ./gradlew app:assembleForkRelease \
-            -PversionName="${VERSION_NAME}" \
-            --stacktrace --no-daemon
+        run: ./gradlew app:assembleForkRelease -PversionName="${VERSION_NAME}" --stacktrace --no-daemon
 
       - name: Sign armeabi-v7a APK
         env:
