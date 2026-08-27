@@ -14,6 +14,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.color.MaterialColors
 import mozilla.components.browser.state.action.DefaultDesktopModeAction
+import mozilla.components.browser.state.selector.selectedTab
 import mozilla.telemetry.glean.private.NoExtras
 import org.mozilla.fenix.GleanMetrics.Autoplay
 import org.mozilla.fenix.R
