@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: tv-apk-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-tv-apk:
     name: Build armeabi-v7a APK
