@@ -115,6 +115,7 @@ import org.mozilla.fenix.ext.isCustomEngine
 import org.mozilla.fenix.ext.isKnownSearchDomain
 import org.mozilla.fenix.home.topsites.TopSitesConfigConstants.TOP_SITES_PROVIDER_LIMIT
 import org.mozilla.fenix.home.topsites.TopSitesConfigConstants.TOP_SITES_PROVIDER_MAX_THRESHOLD
+import org.mozilla.fenix.lifecycle.BackgroundTabSuspender
 import org.mozilla.fenix.lifecycle.StoreLifecycleObserver
 import org.mozilla.fenix.lifecycle.VisibilityLifecycleObserver
 import org.mozilla.fenix.nimbus.FxNimbus
@@ -398,6 +399,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                 appStore = components.appStore,
                 browserStore = components.core.store,
             ),
+            BackgroundTabSuspender(components.core.store),
             VisibilityLifecycleObserver(),
         )
 
