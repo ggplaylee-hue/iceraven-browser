@@ -192,6 +192,12 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                 return super.onKeyDown(keyCode, event)
             }
         }.apply {
+            val isTelevision = resources.configuration.uiMode and Configuration.UI_MODE_TYPE_MASK ==
+                Configuration.UI_MODE_TYPE_TELEVISION
+            if (isTelevision) {
+                setCanceledOnTouchOutside(false)
+            }
+
             setOnShowListener {
                 val safeActivity = activity ?: return@setOnShowListener
                 val appStore = safeActivity.components.appStore
@@ -234,6 +240,10 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                         peekHeight = resources.displayMetrics.heightPixels
                         maxHeight = calculateMenuSheetHeight()
                         skipCollapsed = true
+                        if (isTelevision) {
+                            isHideable = false
+                            isDraggable = false
+                        }
                         state = BottomSheetBehavior.STATE_EXPANDED
                         hideFriction = HIDING_FRICTION
                     }
