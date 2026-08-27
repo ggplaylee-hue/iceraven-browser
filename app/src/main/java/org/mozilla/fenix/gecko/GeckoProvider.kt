@@ -13,7 +13,6 @@ import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
 import mozilla.components.concept.storage.CreditCardsAddressesStorage
 import mozilla.components.concept.storage.LoginsStorage
 import mozilla.components.experiment.NimbusExperimentDelegate
-import mozilla.components.lib.crash.handler.CrashHandlerService
 import mozilla.components.lib.crash.store.CrashAction
 import mozilla.components.service.sync.autofill.GeckoCreditCardsAddressesStorageDelegate
 import mozilla.components.service.sync.logins.GeckoLoginStorageDelegate
@@ -98,7 +97,6 @@ object GeckoProvider {
 
         val builder = GeckoRuntimeSettings.Builder()
             .configFilePath(configFile.absolutePath)
-            .crashHandler(CrashHandlerService::class.java)
             .experimentDelegate(NimbusExperimentDelegate())
             .contentBlocking(
                 policy.toContentBlockingSetting(

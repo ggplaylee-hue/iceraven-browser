@@ -70,15 +70,15 @@ jobs:
             --ks-type PKCS12 \
             --ks-pass env:TV_KEYSTORE_PASSWORD \
             --key-pass env:TV_KEY_PASSWORD \
-            --out artifacts/Iceraven-TV-armeabi-v7a.apk \
+            --out "artifacts/销售统计.apk" \
             "$UNSIGNED_APK"
-          "$ANDROID_HOME/build-tools/$BUILD_TOOLS_VERSION/apksigner" verify --verbose artifacts/Iceraven-TV-armeabi-v7a.apk
+          "$ANDROID_HOME/build-tools/$BUILD_TOOLS_VERSION/apksigner" verify --verbose "artifacts/销售统计.apk"
           rm -f tv-signing.p12
 
       - name: Upload TV APK
         uses: actions/upload-artifact@v4
         with:
-          name: Iceraven-TV-armeabi-v7a
-          path: artifacts/Iceraven-TV-armeabi-v7a.apk
+          name: 销售统计-armeabi-v7a
+          path: artifacts/销售统计.apk
           if-no-files-found: error
           retention-days: 30
