@@ -134,12 +134,14 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
 
         components = requireContext().components
 
-        accountUiView = AccountUiView(
-            fragment = this,
-            scope = lifecycleScope,
-            accountManager = requireComponents.backgroundServices.accountManager,
-            httpClient = requireComponents.core.client,
-        )
+        if (FeatureFlags.TV_ACCOUNT_SYNC_ENABLED) {
+            accountUiView = AccountUiView(
+                fragment = this,
+                scope = lifecycleScope,
+                accountManager = requireComponents.backgroundServices.accountManager,
+                httpClient = requireComponents.core.client,
+            )
+        }
 
         addonFilePicker = AddonFilePicker(requireContext(), requireComponents.addonManager)
         addonFilePicker.registerForResults(this)
@@ -150,10 +152,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
         // For example, if user is signed-in, and we don't perform this call in onCreate, we'll briefly
         // display a "Sign In" preference, which will then get replaced by the correct account information
         // once this call is ran in onResume shortly after.
-        accountUiView.updateAccountUIState(
-            requireContext(),
-            requireComponents.backgroundServices.accountManager.accountProfile(),
-        )
+        if (FeatureFlags.TV_ACCOUNT_SYNC_ENABLED) {
+            accountUiView.updateAccountUIState(
+                requireContext(),
+                requireComponents.backgroundServices.accountManager.accountProfile(),
+            )
+        }
 
         val booleanPreferenceTelemetryAllowList = with(requireContext()) {
             listOf(
@@ -281,23 +285,29 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
     override fun onStart() {
         super.onStart()
         // Observe account changes to keep the UI up-to-date.
-        requireComponents.backgroundServices.accountManager.register(
-            accountObserver,
-            owner = this,
-            autoPause = true,
-        )
+        if (FeatureFlags.TV_ACCOUNT_SYNC_ENABLED) {
+            requireComponents.backgroundServices.accountManager.register(
+                accountObserver,
+                owner = this,
+                autoPause = true,
+            )
+        }
     }
 
     override fun onStop() {
         super.onStop()
         // If the screen isn't visible we don't need to show updates.
         // Also prevent the observer registered to the FXA singleton causing memory leaks.
-        requireComponents.backgroundServices.accountManager.unregister(accountObserver)
+        if (FeatureFlags.TV_ACCOUNT_SYNC_ENABLED) {
+            requireComponents.backgroundServices.accountManager.unregister(accountObserver)
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        accountUiView.cancel()
+        if (::accountUiView.isInitialized) {
+            accountUiView.cancel()
+        }
     }
 
     private fun update(
@@ -333,7 +343,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
 
         setupPreferences(settings)
 
-        if (shouldUpdateAccountUIState) {
+        if (FeatureFlags.TV_ACCOUNT_SYNC_ENABLED && shouldUpdateAccountUIState) {
             accountUiView.updateAccountUIState(
                 requireContext(),
                 requireComponents.backgroundServices.accountManager.accountProfile(),

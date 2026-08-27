@@ -514,17 +514,16 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                 components.settings.deletePocketDatabaseIfNeeded()
                 components.settings.deleteReportSiteDomainsDataStoreIfNeeded()
             }
-            // Account manager initialization needs to happen on the main thread.
-            GlobalScope.launch(Dispatchers.Main) {
-                logElapsedTime(logger, "Kicking-off account manager") {
-                    components.backgroundServices.accountManager
-                }
+            if (FeatureFlags.TV_ACCOUNT_SYNC_ENABLED) {
+                // Account manager initialization needs to happen on the main thread.
+                GlobalScope.launch(Dispatchers.Main) {
+                    logElapsedTime(logger, "Kicking-off account manager") {
+                        components.backgroundServices.accountManager
+                    }
 
-                // Start Relay feature to monitor account state throughout the app lifecycle.
-                // Note: This feature monitors FxA account changes and runs regardless of user
-                // settings; UI components check settings before actually using Relay functionality.
-                logElapsedTime(logger, "Starting Relay feature integration") {
-                    components.relayFeatureIntegration.start()
+                    logElapsedTime(logger, "Starting Relay feature integration") {
+                        components.relayFeatureIntegration.start()
+                    }
                 }
             }
         }
@@ -648,8 +647,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
 
             WebPushEngineIntegration(components.core.engine, it).start()
 
-            // Perform a one-time initialization of the account manager if a message is received.
-            PushFxaIntegration(it, lazy { components.backgroundServices.accountManager }).launch()
+            if (FeatureFlags.TV_ACCOUNT_SYNC_ENABLED) {
+                PushFxaIntegration(it, lazy { components.backgroundServices.accountManager }).launch()
+            }
 
             // Initialize the service. This could potentially be done in a coroutine in the future.
             it.initialize()

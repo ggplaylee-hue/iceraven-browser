@@ -129,6 +129,7 @@ fun MainMenu(
     accessPoint: MenuAccessPoint,
     account: Account?,
     accountState: AccountState,
+    showMozillaAccount: Boolean = true,
     showQuitMenu: Boolean,
     isBottomToolbar: Boolean,
     isExpandedToolbarEnabled: Boolean,
@@ -318,11 +319,13 @@ fun MainMenu(
         )
 
         MenuGroup {
-            MozillaAccountMenuItem(
-                account = account,
-                accountState = accountState,
-                onClick = onMozillaAccountButtonClick,
-            )
+            if (showMozillaAccount) {
+                MozillaAccountMenuItem(
+                    account = account,
+                    accountState = accountState,
+                    onClick = onMozillaAccountButtonClick,
+                )
+            }
 
             if (accessPoint == MenuAccessPoint.Home) {
                 MenuItem(

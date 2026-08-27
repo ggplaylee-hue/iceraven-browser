@@ -1455,9 +1455,31 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
     }
 
     final override fun attachBaseContext(base: Context) {
+        val optimizedContext = base.withTvDisplayDensity()
         base.components.strictMode.allowViolation(StrictMode::allowThreadDiskReads) {
-            super.attachBaseContext(base)
+            super.attachBaseContext(optimizedContext)
         }
+    }
+
+    private fun Context.withTvDisplayDensity(): Context {
+        val current = resources.configuration
+        val isTelevision = current.uiMode and Configuration.UI_MODE_TYPE_MASK ==
+            Configuration.UI_MODE_TYPE_TELEVISION
+        if (!isTelevision) {
+            return this
+        }
+
+        val densityScale = FeatureFlags.TV_DENSITY_DPI / 160f
+        val widthDp = (resources.displayMetrics.widthPixels / densityScale).toInt()
+        val heightDp = (resources.displayMetrics.heightPixels / densityScale).toInt()
+        val tvConfiguration = Configuration(current).apply {
+            densityDpi = FeatureFlags.TV_DENSITY_DPI
+            screenWidthDp = widthDp
+            screenHeightDp = heightDp
+            smallestScreenWidthDp = minOf(widthDp, heightDp)
+        }
+
+        return createConfigurationContext(tvConfiguration)
     }
 
     final override fun getSystemService(name: String): Any? {

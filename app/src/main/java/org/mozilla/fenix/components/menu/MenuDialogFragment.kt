@@ -314,7 +314,6 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                         bottomEnd = CornerSize(0.dp),
                     ),
                 ) {
-                    val syncStore = components.backgroundServices.syncStore
                     val tabCollectionStorage = components.core.tabCollectionStorage
                     val printContentUseCase = components.useCases.sessionUseCases.printContent
                     val saveToPdfUseCase = components.useCases.sessionUseCases.saveToPdf
@@ -490,14 +489,6 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                             Route.MainMenu -> {
                                 handlebarContentDescription = descMain
 
-                                val account by remember {
-                                    syncStore.stateFlow
-                                        .map { state -> state.account }
-                                }.collectAsState(initial = null)
-                                val accountState by remember {
-                                    syncStore.stateFlow
-                                        .map { state -> state.accountState }
-                                }.collectAsState(initial = NotAuthenticated)
                                 val isSiteLoading by remember {
                                     browserStore.stateFlow
                                         .map { state -> state.selectedTab?.content?.loading == true }
@@ -528,8 +519,9 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
 
                                 MainMenu(
                                     accessPoint = args.accesspoint,
-                                    account = account,
-                                    accountState = accountState,
+                                    account = null,
+                                    accountState = NotAuthenticated,
+                                    showMozillaAccount = false,
                                     showQuitMenu = settings.shouldDeleteBrowsingDataOnQuit,
                                     isBottomToolbar = settings.shouldUseBottomToolbar,
                                     isExpandedToolbarEnabled = settings.shouldUseExpandedToolbar,
@@ -553,14 +545,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                                     isAllWebExtensionsDisabled = isAllWebExtensionsDisabled,
                                     showIPProtection = components.ipProtection.store.state.isEligible,
                                     ipProtectionMenuState = ipProtectionMenuState,
-                                    onMozillaAccountButtonClick = {
-                                        menuStore.dispatch(
-                                            MenuAction.Navigate.MozillaAccount(
-                                                accountState = accountState,
-                                                accesspoint = args.accesspoint,
-                                            ),
-                                        )
-                                    },
+                                    onMozillaAccountButtonClick = {},
                                     onSettingsButtonClick = {
                                         menuStore.dispatch(MenuAction.Navigate.Settings)
                                     },

@@ -33,7 +33,13 @@ object FeatureFlags {
      *
      * ⚠️ DO NOT MODIFY THIS FLAG IN PRODUCTION.
      */
-    val onboardingFeatureEnabled = !Config.channel.isDebug
+    val onboardingFeatureEnabled = false
+
+    /** Firefox account and Sync are not used by the dedicated TV browser. */
+    const val TV_ACCOUNT_SYNC_ENABLED = false
+
+    /** Render the TV app at a tablet-like 240 dpi instead of the system's phone-like 320 dpi. */
+    const val TV_DENSITY_DPI = 240
 
     /**
      * Enables Firefox Labs.
