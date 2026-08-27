@@ -99,7 +99,7 @@ class Settings(
     companion object {
         const val FENIX_PREFERENCES = "fenix_preferences"
         const val TV_DESKTOP_USER_AGENT =
-            "Mozilla/5.0 (X11; Linux x86_64; rv:154.0) Gecko/20100101 Firefox/154.0"
+            "Mozilla/5.0 AppleWebKit/537.36 Chrome/128.0.0.0 Safari/537.36"
 
         private const val BLOCKED_INT = 0
         private const val ASK_TO_ALLOW_INT = 1
