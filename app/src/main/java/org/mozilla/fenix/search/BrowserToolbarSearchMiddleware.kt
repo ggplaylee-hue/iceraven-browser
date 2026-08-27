@@ -244,6 +244,22 @@ class BrowserToolbarSearchMiddleware(
                 browserStore.dispatch(EngagementFinished(abandoned = false))
             }
 
+            "about:settings", "about:preferences" -> {
+                navController.navigate(
+                    NavGraphDirections.actionGlobalSettingsFragment(),
+                )
+                browserStore.dispatch(EngagementFinished(abandoned = false))
+            }
+
+            "about:ua" -> {
+                navController.navigate(
+                    NavGraphDirections.actionGlobalSitePermissionsFragment(
+                        preferenceToScrollTo = uiContext.getString(R.string.pref_key_tv_user_agent),
+                    ),
+                )
+                browserStore.dispatch(EngagementFinished(abandoned = false))
+            }
+
             "about:glean" -> {
                 navController.navigate(
                     NavGraphDirections.actionGlobalGleanDebugToolsFragment(),

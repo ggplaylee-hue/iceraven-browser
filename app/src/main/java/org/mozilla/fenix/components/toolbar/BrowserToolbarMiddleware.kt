@@ -114,6 +114,7 @@ import org.mozilla.fenix.components.toolbar.BrowserToolbarTestTags.SITE_INFO_SEC
 import org.mozilla.fenix.components.toolbar.BrowserToolbarTestTags.SITE_INFO_UNKNOWN
 import org.mozilla.fenix.components.toolbar.BrowserToolbarTestTags.SITE_INFO_UNSECURE
 import org.mozilla.fenix.components.toolbar.DisplayActions.AddBookmarkClicked
+import org.mozilla.fenix.components.toolbar.DisplayActions.AddonsClicked
 import org.mozilla.fenix.components.toolbar.DisplayActions.EditBookmarkClicked
 import org.mozilla.fenix.components.toolbar.DisplayActions.HomepageClicked
 import org.mozilla.fenix.components.toolbar.DisplayActions.MenuClicked
@@ -123,6 +124,7 @@ import org.mozilla.fenix.components.toolbar.DisplayActions.NavigateForwardClicke
 import org.mozilla.fenix.components.toolbar.DisplayActions.NavigateForwardLongClicked
 import org.mozilla.fenix.components.toolbar.DisplayActions.RefreshClicked
 import org.mozilla.fenix.components.toolbar.DisplayActions.ShareClicked
+import org.mozilla.fenix.components.toolbar.DisplayActions.SettingsClicked
 import org.mozilla.fenix.components.toolbar.DisplayActions.StopRefreshClicked
 import org.mozilla.fenix.components.toolbar.DisplayActions.SummarizeClicked
 import org.mozilla.fenix.components.toolbar.DisplayActions.TranslateClicked
@@ -157,6 +159,8 @@ import mozilla.components.ui.tabcounter.R as tabcounterR
 @VisibleForTesting
 internal sealed class DisplayActions(override val source: Source) : BrowserToolbarEvent {
     data class MenuClicked(override val source: Source) : DisplayActions(source)
+    data class SettingsClicked(override val source: Source) : DisplayActions(source)
+    data class AddonsClicked(override val source: Source) : DisplayActions(source)
     data class NavigateBackClicked(override val source: Source) : DisplayActions(source)
     data class NavigateBackLongClicked(override val source: Source) : DisplayActions(source)
     data object NavigateForwardClicked : DisplayActions(Source.AddressBar.BrowserStart)
@@ -317,6 +321,16 @@ class BrowserToolbarMiddleware(
                     ),
                 )
 
+                next(action)
+            }
+
+            is SettingsClicked -> {
+                navController.navigate(NavGraphDirections.actionGlobalSettingsFragment())
+                next(action)
+            }
+
+            is AddonsClicked -> {
+                navController.navigate(NavGraphDirections.actionGlobalAddonsManagementFragment())
                 next(action)
             }
 
@@ -799,6 +813,8 @@ class BrowserToolbarMiddleware(
             ToolbarActionConfig(ToolbarAction.TabCounter) {
                 !shouldUseExpandedToolbar || !isTallWindow || isWideWindow
             },
+            ToolbarActionConfig(ToolbarAction.Settings) { isWideWindow },
+            ToolbarActionConfig(ToolbarAction.Addons) { isWideWindow },
             ToolbarActionConfig(ToolbarAction.Menu) {
                 !shouldUseExpandedToolbar || !isTallWindow || isWideWindow
             },
@@ -1145,6 +1161,8 @@ class BrowserToolbarMiddleware(
         Forward,
         RefreshOrStop,
         Menu,
+        Settings,
+        Addons,
         ReaderMode,
         Translate,
         TabCounter,
@@ -1232,6 +1250,18 @@ class BrowserToolbarMiddleware(
             highlighted = appStore.state.supportedMenuNotifications
                 .filterNot { it == NotDefaultBrowser }.isNotEmpty(),
             onClick = MenuClicked(source),
+        )
+
+        ToolbarAction.Settings -> ActionButtonRes(
+            drawableResId = iconsR.drawable.mozac_ic_settings_24,
+            contentDescription = R.string.browser_menu_settings,
+            onClick = SettingsClicked(source),
+        )
+
+        ToolbarAction.Addons -> ActionButtonRes(
+            drawableResId = iconsR.drawable.mozac_ic_extension_24,
+            contentDescription = R.string.browser_menu_extensions,
+            onClick = AddonsClicked(source),
         )
 
         ToolbarAction.ReaderMode -> ActionButtonRes(

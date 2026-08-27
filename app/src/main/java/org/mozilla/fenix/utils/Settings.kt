@@ -98,6 +98,8 @@ class Settings(
 ) : PreferencesHolder {
     companion object {
         const val FENIX_PREFERENCES = "fenix_preferences"
+        const val TV_DESKTOP_USER_AGENT =
+            "Mozilla/5.0 (X11; Linux x86_64; rv:154.0) Gecko/20100101 Firefox/154.0"
 
         private const val BLOCKED_INT = 0
         private const val ASK_TO_ALLOW_INT = 1
@@ -245,6 +247,12 @@ class Settings(
      */
     val activeSimpleToolbarShortcutKey: String
         get() = if (isTabStripEnabled) toolbarTabStripShortcutKey else toolbarSimpleShortcutKey
+
+    /** User-Agent override used by the TV browser. An empty value restores the engine default. */
+    var tvUserAgent: String by stringPreference(
+        key = appContext.getPreferenceKey(R.string.pref_key_tv_user_agent),
+        default = TV_DESKTOP_USER_AGENT,
+    )
 
     /**
      * Indicates if the Pocket recommendations homescreen section should also show sponsored stories.

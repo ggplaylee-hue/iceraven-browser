@@ -585,6 +585,7 @@
     <string name="pref_key_last_set_as_default_prompt_request_time" translatable="false">pref_key_last_set_as_default_prompt_request_time</string>
 
     <string name="pref_key_desktop_browsing" translatable="false">pref_key_desktop_browsing</string>
+    <string name="pref_key_tv_user_agent" translatable="false">pref_key_tv_user_agent</string>
 
     <!-- Crash reporting -->
     <string name="pref_key_crash_reporting_cutoff_date" translatable="false">pref_key_crash_reporting_cutoff_date_2026_08_18</string>

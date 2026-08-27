@@ -7,6 +7,7 @@ package org.mozilla.fenix.settings.sitepermissions
 import android.os.Bundle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
@@ -40,6 +41,7 @@ class SiteSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragm
 
         // This should be setup in onCreatePreferences so we setup only once when the fragment is created
         bindDesktopMode()
+        bindUserAgent()
     }
 
     override fun onResume() {
@@ -72,6 +74,33 @@ class SiteSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragm
                     requireComponents.core.store.dispatch(DefaultDesktopModeAction.ToggleDesktopMode)
                     true
                 }
+        }
+    }
+
+    private fun bindUserAgent() {
+        requirePreference<EditTextPreference>(R.string.pref_key_tv_user_agent).apply {
+            val components = requireContext().components
+            isPersistent = false
+            text = components.settings.tvUserAgent
+            summaryProvider = EditTextPreference.SimpleSummaryProvider.getInstance()
+            setOnBindEditTextListener { editText ->
+                editText.setSingleLine()
+                editText.selectAll()
+            }
+            onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+                val userAgent = (newValue as String).trim()
+                val override = userAgent.ifBlank { null }
+
+                components.settings.tvUserAgent = userAgent
+                components.core.engine.settings.userAgentString = override
+                components.core.store.state.selectedTab
+                    ?.engineState
+                    ?.engineSession
+                    ?.settings
+                    ?.userAgentString = override
+                components.useCases.sessionUseCases.reload(components.core.store.state.selectedTabId)
+                true
+            }
         }
     }
 

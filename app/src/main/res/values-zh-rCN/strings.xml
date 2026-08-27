@@ -2326,6 +2326,8 @@
   <string name="preferences_category_content">内容</string>
   <!-- Preference for altering the default browsing mode. When enabled, the desktop site will always be requested. -->
   <string name="preference_feature_desktop_mode_default">始终请求桌面版网页</string>
+  <string name="preference_tv_user_agent">User-Agent（UA）</string>
+  <string name="preference_tv_user_agent_dialog">修改 User-Agent（UA）</string>
   <!--
     Collections
 

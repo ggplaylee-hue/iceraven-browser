@@ -919,6 +919,18 @@ class BrowserToolbarSearchMiddlewareTest {
     }
 
     @Test
+    fun `WHEN about settings is searched THEN navigate to settings fragment`() {
+        val captorMiddleware = CaptureActionsMiddleware<AppState, AppAction>()
+        val appStore = AppStore(middlewares = listOf(captorMiddleware))
+        val (_, store) = buildMiddlewareAndAddToStore(appStore = appStore)
+
+        store.dispatch(CommitUrl("about:settings"))
+
+        verify { navController.navigate(NavGraphDirections.actionGlobalSettingsFragment()) }
+        captorMiddleware.assertLastAction(SearchEnded::class) {}
+    }
+
+    @Test
     fun `WHEN about glean is searched THEN navigate to glean debug tools fragment`() {
         val captorMiddleware = CaptureActionsMiddleware<AppState, AppAction>()
         val appStore = AppStore(middlewares = listOf(captorMiddleware))

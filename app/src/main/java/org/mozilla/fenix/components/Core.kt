@@ -167,6 +167,7 @@ class Core(
             requestInterceptor = requestInterceptor,
             remoteDebuggingEnabled = context.components.settings.isRemoteDebuggingEnabled,
             testingModeEnabled = false,
+            userAgentString = context.components.settings.tvUserAgent.ifBlank { null },
             trackingProtectionPolicy = trackingProtectionPolicyFactory.createTrackingProtectionPolicy(),
             historyTrackingDelegate = HistoryDelegate(lazyHistoryStorage),
             preferredColorScheme = getPreferredColorScheme(),
