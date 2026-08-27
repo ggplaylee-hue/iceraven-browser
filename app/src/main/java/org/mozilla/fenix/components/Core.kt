@@ -173,7 +173,7 @@ class Core(
             preferredColorScheme = getPreferredColorScheme(),
             automaticFontSizeAdjustment = context.components.settings.shouldUseAutoSize,
             fontInflationEnabled = context.components.settings.shouldUseAutoSize,
-            suspendMediaWhenInactive = false,
+            suspendMediaWhenInactive = true,
             forceUserScalableContent = context.components.settings.forceEnableZoom,
             loginAutofillEnabled = context.components.settings.shouldAutofillLogins,
             enterpriseRootsEnabled = context.components.settings.allowThirdPartyRootCerts,

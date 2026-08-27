@@ -23,8 +23,11 @@ import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.nimbus.FxNimbus
 import org.mozilla.geckoview.GeckoRuntime
 import org.mozilla.geckoview.GeckoRuntimeSettings
+import java.io.File
 
 object GeckoProvider {
+    private const val TV_GECKOVIEW_CONFIG = "tv-geckoview-config.yaml"
+
     private var runtime: GeckoRuntime? = null
 
     @Synchronized
@@ -87,7 +90,14 @@ object GeckoProvider {
         context: Context,
         policy: TrackingProtectionPolicy,
     ): GeckoRuntimeSettings {
+        val configFile = File(context.noBackupFilesDir, TV_GECKOVIEW_CONFIG).apply {
+            context.assets.open(TV_GECKOVIEW_CONFIG).use { input ->
+                outputStream().use { output -> input.copyTo(output) }
+            }
+        }
+
         val builder = GeckoRuntimeSettings.Builder()
+            .configFilePath(configFile.absolutePath)
             .crashHandler(CrashHandlerService::class.java)
             .experimentDelegate(NimbusExperimentDelegate())
             .contentBlocking(
